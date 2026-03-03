@@ -13,11 +13,39 @@
   canvas {
     display: block;
   }
+
+  /* === ENTER LINK === */
+  .enter-link {
+    position: fixed;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.4em;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 28px;
+    border: 2px solid #fff;
+    transition: all 0.4s ease;
+    z-index: 10;
+  }
+
+  .enter-link:hover {
+    background: #fff;
+    color: #000;
+  }
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
+
+<a class="enter-link" 
+   href="https://www.researchcatalogue.net/view/4124875/4130104" 
+   target="_blank">
+   E N T E R
+</a>
 
 <script>
 const canvas = document.getElementById("c");
@@ -34,8 +62,6 @@ window.addEventListener("resize", resize);
 const mask = document.createElement("canvas");
 const mctx = mask.getContext("2d");
 
-
-
 function drawMask() {
   mask.width = canvas.width;
   mask.height = canvas.height;
@@ -51,7 +77,6 @@ function drawMask() {
   const x = mask.width / 2;
   const y = mask.height / 2;
 
-  // === TITLE ===
   const titleSize = 120;
   mctx.font = `bold ${titleSize}px Arial Black, Helvetica, sans-serif`;
 
@@ -61,17 +86,14 @@ function drawMask() {
   const museumWidth = mctx.measureText("MUSEUM").width;
   const scaleMuseum = mouseWidth / museumWidth;
 
-  // MOUSE
   mctx.fillText("MOUSE", x, y - lineHeight);
 
-  // MUSEUM (compressed)
   mctx.save();
   mctx.translate(x, y);
   mctx.scale(scaleMuseum, 1);
   mctx.fillText("MUSEUM", 0, 0);
   mctx.restore();
 
-  // === SUBTITLE ===
   const subtitleSize = 42;
   mctx.font = `${subtitleSize}px Arial, Helvetica, sans-serif`;
 
@@ -87,7 +109,6 @@ function drawMask() {
   mctx.fillText(subtitle, 0, 0);
   mctx.restore();
 
-  // === COPYRIGHT ===
   const copySize = 20;
   mctx.font = `${copySize}px Arial, Helvetica, sans-serif`;
 
@@ -96,9 +117,6 @@ function drawMask() {
 
   mctx.fillText(copy, x, copyY);
 }
-
-
-
 
 drawMask();
 
@@ -111,15 +129,13 @@ function draw() {
   const maskData = mctx.getImageData(0, 0, mask.width, mask.height).data;
 
   for (let i = 0; i < data.length; i += 4) {
-    const mx = maskData[i]; // 0–255
+    const mx = maskData[i];
     let v = Math.random() * 255;
 
-    // bias semantico: il rumore "collassa" dove c'è EXIT
     if (mx > 0) {
       v = v * 0.3 + 180 + Math.sin(frame * 0.15 + i) * 50;
     }
 
-    // elettricità: flicker aggressivo
     if (Math.random() < 0.015) v = 255;
     if (Math.random() < 0.015) v = 0;
 
